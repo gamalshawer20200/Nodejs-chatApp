@@ -17,16 +17,17 @@ io.on('connection', (socket) => {  //allows you to listen to an event and do som
 
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to The Chat-App'))
 
-    socket.broadcast.emit('newArrival', generateMessage('Admin', 'New User Joined'))
+    socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User Joined'))
 
-    socket.on('createMessage', (message) => {
+    socket.on('createMessage', (message,callback) => {
         console.log('Message', message)
-        // io.emit('newMessage', {      //hub topology ... btb3t el msg L kolu beek nta kman
-        //     from: message.from,
-        //     text: message.text,   
-        //     createdAt: new Date().toLocaleDateString()
-        // })
-        socket.broadcast.emit('newMessage', generateMessage(message.from, message.text))  //router topology ... btbt3t el msg L kolu ela enta
+        io.emit('newMessage', {      //hub topology ... btb3t el msg L kolu beek nta kman
+            from: message.from,
+            text: message.text,   
+            createdAt: new Date().toLocaleDateString()
+        })
+        callback('This is from the server')
+        //socket.broadcast.emit('newMessage', generateMessage(message.from, message.text))  //router topology ... btbt3t el msg L kolu ela enta
     })
 
     socket.on('disconnect', (socket) => {

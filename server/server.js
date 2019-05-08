@@ -7,7 +7,7 @@ const publicPath = path.join(__dirname, '../public')
 const port = process.env.PORT || 3000;
 var app = express()
 var server = http.createServer(app)
-var io = SocketIo(server)
+var io = socketIo(server)
 // console.log(__dirname+ '/../public')
 // console.log(publicPath)
 
@@ -20,11 +20,12 @@ io.on('connection', (socket) => {  //allows you to listen to an event and do som
     socket.emit('newMessage', {
         from: 'serverGM@example.com',
         text: 'Welcome to chat-room from SERVER !',
-        createdAt: 123
+        createdAt: new Date().toLocaleDateString()
     })
-    socket.broadcast.emit('newArrival',{
-        from:'Admin',
-        text:`New user joined`
+    socket.broadcast.emit('newArrival', {
+        from: 'Admin',
+        text: `New user joined`,
+        createdAt: new Date().toLocaleDateString()
     })
 
     socket.on('createMessage', (message) => {
@@ -34,7 +35,7 @@ io.on('connection', (socket) => {  //allows you to listen to an event and do som
         //     text: message.text,
         //     createdAt: new Date().toLocaleDateString()
         // })
-        socket.broadcast.emit('newMessage',{
+        socket.broadcast.emit('newMessage', {
             from: message.from,
             text: message.text,
             createdAt: new Date().toLocaleDateString()

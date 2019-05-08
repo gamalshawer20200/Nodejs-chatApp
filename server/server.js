@@ -25,7 +25,12 @@ io.on('connection', (socket) => {  //allows you to listen to an event and do som
 
     socket.on('createMessage', (message) => {
         console.log('Message', message)
-        io.emit('newMessage', {
+        // io.emit('newMessage', {
+        //     from: message.from,
+        //     text: message.text,
+        //     createdAt: new Date().toLocaleDateString()
+        // })
+        socket.broadcast.emit('newMessage',{
             from: message.from,
             text: message.text,
             createdAt: new Date().toLocaleDateString()

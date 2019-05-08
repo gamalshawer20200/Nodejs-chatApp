@@ -26,7 +26,7 @@ io.on('connection', (socket) => {  //allows you to listen to an event and do som
             text: message.text,
             createdAt: new Date().toLocaleDateString()
         })
-        callback('This is from the server')
+        callback()
         //socket.broadcast.emit('newMessage', generateMessage(message.from, message.text))  //router topology ... btbt3t el msg L kolu ela enta
     })
 

@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path');
 const http = require('http')
 const express = require('express')
 const SocketIo = require('socket.io')
@@ -17,11 +17,15 @@ app.use(express.static(publicPath))
 io.on('connection', (socket) => {  //allows you to listen to an event and do something when this event happens
     console.log('New User Connected')
 
-    // socket.emit('newMessage', {
-    //     from: 'serverGM@example.com',
-    //     text: 'Hello every one to the chat-room from SERVER !',
-    //     createdAt: 123
-    // })
+    socket.emit('newMessage', {
+        from: 'serverGM@example.com',
+        text: 'Welcome to chat-room from SERVER !',
+        createdAt: 123
+    })
+    socket.broadcast.emit('newArrival',{
+        from:'Admin',
+        text:`New user joined`
+    })
 
     socket.on('createMessage', (message) => {
         console.log('Message', message)

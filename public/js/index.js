@@ -15,16 +15,18 @@ socket.on('disconnect', function () {
 
 socket.on('newMessage', function (message) {
     console.log('message', message) //client side consle chorme ctrl+shift+i -> console
+    var formatedTime = moment(message.createdAt).format('h:mm a')    
     var li = jQuery('<li></li>');
-    li.text(`${message.from} : ${message.text}`)
+    li.text(`${message.from} ${formatedTime} : ${message.text}`)
 
     jQuery('#messages').append(li);
 });
 
 socket.on('newLocationMessage', function (message) {
+    var formatedTime = moment(message.createdAt).format('h:mm a')
     var li = jQuery('<li></li>')
     var a = jQuery('<a target="_blank">My current location</a>')
-    li.text(`${message.from}: `)
+    li.text(`${message.from} ${formatedTime}: `)
     a.attr('href', message.url)  //a.attr('target') => it will print its value which is currently target
     li.append(a)
     jQuery('#messages').append(li);

@@ -3,6 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
+const { generateMessage } = require('./utils/message');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 var app = express();
@@ -14,29 +15,18 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {  //allows you to listen to an event and do something when this event happens
     console.log('New User Connected')
 
-    socket.emit('newMessage', {
-        from: 'serverGM@example.com',
-        text: 'Welcome to chat-room from SERVER !',
-        createdAt: new Date().toLocaleDateString()
-    })
-    socket.broadcast.emit('newArrival', {
-        from: 'Admin',
-        text: `New user joined`,
-        createdAt: new Date().toLocaleDateString()
-    })
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to The Chat-App'))
+
+    socket.broadcast.emit('newArrival', generateMessage('Admin', 'New User Joined'))
 
     socket.on('createMessage', (message) => {
         console.log('Message', message)
-        // io.emit('newMessage', {
+        // io.emit('newMessage', {      //hub topology ... btb3t el msg L kolu beek nta kman
         //     from: message.from,
-        //     text: message.text,
+        //     text: message.text,   
         //     createdAt: new Date().toLocaleDateString()
         // })
-        socket.broadcast.emit('newMessage', {
-            from: message.from,
-            text: message.text,
-            createdAt: new Date().toLocaleDateString()
-        })
+        socket.broadcast.emit('newMessage', generateMessage(message.from, message.text))  //router topology ... btbt3t el msg L kolu ela enta
     })
 
     socket.on('disconnect', (socket) => {

@@ -17,23 +17,19 @@ app.use(express.static(publicPath))
 io.on('connection', (socket) => {  //allows you to listen to an event and do something when this event happens
     console.log('New User Connected')
 
-    // socket.emit('newEmail', {
-    //     from: 'newEmail@example.com',
-    //     text: 'Hey, what is going on',
+    // socket.emit('newMessage', {
+    //     from: 'serverGM@example.com',
+    //     text: 'Hello every one to the chat-room from SERVER !',
     //     createdAt: 123
-    // })
-    socket.emit('newMessage', {
-        from: 'newMessage@example.com',
-        text: 'Hello every one to the chat-room from SERVER !'
-    })
-
-    // socket.on('createEmail', (newEmail) => {
-    //     console.log('createEmail', newEmail)
-    //     // console.log('This E-mail well sent to -> ', newEmail.to)
     // })
 
     socket.on('createMessage', (message) => {
-        console.log('Message',message)
+        console.log('Message', message)
+        io.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().toLocaleDateString()
+        })
     })
 
     socket.on('disconnect', (socket) => {

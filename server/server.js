@@ -3,7 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
-const { generateMessage } = require('./utils/message');
+const { generateMessage, generateLocationMessage } = require('./utils/message');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 var app = express();
@@ -19,15 +19,19 @@ io.on('connection', (socket) => {  //allows you to listen to an event and do som
 
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User Joined'))
 
-    socket.on('createMessage', (message,callback) => {
+    socket.on('createMessage', (message, callback) => {
         console.log('Message', message)
         io.emit('newMessage', {      //hub topology ... btb3t el msg L kolu beek nta kman
             from: message.from,
-            text: message.text,   
+            text: message.text,
             createdAt: new Date().toLocaleDateString()
         })
         callback('This is from the server')
         //socket.broadcast.emit('newMessage', generateMessage(message.from, message.text))  //router topology ... btbt3t el msg L kolu ela enta
+    })
+
+    socket.on('createLocationMessage', (coords) => {
+        io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude))
     })
 
     socket.on('disconnect', (socket) => {

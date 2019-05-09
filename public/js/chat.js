@@ -12,14 +12,23 @@ function scrollToBottom() {
     var newMessageHeight = newMessage.innerHeight()
     var lastMessageHeight = newMessage.prev().innerHeight()
 
-    if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight){
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
         messages.scrollTop(scrollHeight)
     }
 }
 
 socket.on('connect', function () {
-    console.log('Connected to the server !')
+    //console.log('Connected to the server !')
+    var params = jQuery.deparam(window.location.search)
 
+    socket.emit('join', params, function (err) {
+        if (err) {
+            alert(err)
+            window.location.href = '/'
+        } else {
+            console.log('No error')
+        }
+    });
     // socket.emit('createMessage', {
     //     from: 'Jemi@example.com',
     //     text: 'Welcome back iam New here !'
@@ -67,6 +76,15 @@ socket.on('newLocationMessage', function (message) {
     // a.attr('href', message.url)  //a.attr('target') => it will print its value which is currently target
     // li.append(a)
     // jQuery('#messages').append(li);
+})
+
+socket.on('updateUserList', function (users) {
+    var ol = jQuery('<ol></ol>');
+
+    users.forEach(function (user) {
+        ol.append(jQuery('<li></li>').text(user))
+    });
+    jQuery('#users').html(ol)
 })
 
 jQuery('#message-form').on('submit', function (e) {

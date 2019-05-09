@@ -15,9 +15,16 @@ class Users {
         this.users = [];
     }
     addUser(id, name, room) {
-        var user = { id, name, room }
-        this.users.push(user)
-        return user
+        return new Promise((resolve, reject) => {
+            var user = { id, name, room }
+            var foundUser = this.users.find((item) => item.name === user.name && item.room === user.room)
+            if (!foundUser) {
+                this.users.push(user)
+                resolve(user)
+            } else {
+                reject('this username is already exist')
+            }
+        })
     }
     removeUser(id) {
         var user = this.getUser(id)

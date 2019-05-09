@@ -24,17 +24,20 @@ describe('Users', () => {
         }]
     });
 
-    it('should add new user', () => {
-        var users = new Users();
+    it('should add new user', (done) => {
+        //var users = new Users();
         var user = {
             id: 123,
-            name: 'gamal',
+            name: 'newUser',
             room: 'Yuma Fans'
         }
-        var resUser = users.addUser(user.id, user.name, user.room)
+        users.addUser(user.id, user.name, user.room).then((user) => {
+            expect(user.name).toBe(user.name)
+            expect(users.users).toInclude(user)
+            done()
+        }).catch((e) => done(new Error (e)))
 
-        expect(resUser.name).toBe(user.name)
-        expect(users.users).toInclude(user)
+
     })
 
     it('should return names for Yuma Fans', () => {

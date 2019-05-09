@@ -20,7 +20,7 @@ io.on('connection', (socket) => {  //allows you to listen to an event and do som
     console.log('New User Connected')
 
 
-    socket.on('join', (params, callback) => {
+    socket.on('join',(params, callback) => {
         if (!isRealString(params.name) || !isRealString(params.room)) {
             return callback('Name and Room name are required !')
             // we add return to stop executing the code below as it will crash when addUser is fired with inValid data
@@ -28,13 +28,17 @@ io.on('connection', (socket) => {  //allows you to listen to an event and do som
         socket.join(params.room);
         //socket.leave('Yuma Fans')
         users.removeUser(socket.id) //remove from previous room
-        users.addUser(socket.id, params.name, params.room)
+        users.addUser(socket.id, params.name, params.room).then((user)=>{
+            io.to(params.room).emit('updateUserList', users.getUserList(params.room))
 
-        io.to(params.room).emit('updateUserList', users.getUserList(params.room))
+            socket.emit('newMessage', generateMessage('Admin', 'Welcome to The Chat-App'))
+            socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined.`))
+            callback()
+        }).catch((e)=>{
+            callback(e)
+        })
 
-        socket.emit('newMessage', generateMessage('Admin', 'Welcome to The Chat-App'))
-        socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined.`))
-        callback()
+
     })
 
     socket.on('createMessage', (message, callback) => {

@@ -24,7 +24,7 @@ io.on('connection', (socket) => {  //allows you to listen to an event and do som
         io.emit('newMessage', {      //hub topology ... btb3t el msg L kolu beek nta kman
             from: message.from,
             text: message.text,
-            createdAt: new Date().toLocaleDateString()
+            createdAt: message.createdAt
         })
         callback()
         //socket.broadcast.emit('newMessage', generateMessage(message.from, message.text))  //router topology ... btbt3t el msg L kolu ela enta

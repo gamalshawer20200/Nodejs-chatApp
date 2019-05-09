@@ -9,7 +9,7 @@ describe('generateMessage', () => {
         var message = generateMessage(from, text)
         expect(message.from).toBe(from)
         expect(message.text).toBe('Hello world')
-        expect(typeof message.createdAt).toBe('string')
+        expect(typeof message.createdAt).toBe('number')
         expect(message).toInclude({ from, text })
         done()
     })

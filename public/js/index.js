@@ -1,5 +1,22 @@
 var socket = io();
 
+function scrollToBottom() {
+    // Selectors
+    var messages = jQuery('#messages')
+    var newMessage = messages.children('li:last-child')
+
+    // Heights
+    var clientHeight = messages.prop('clientHeight')
+    var scrollTop = messages.prop('scrollTop')
+    var scrollHeight = messages.prop('scrollHeight')
+    var newMessageHeight = newMessage.innerHeight()
+    var lastMessageHeight = newMessage.prev().innerHeight()
+
+    if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight){
+        messages.scrollTop(scrollHeight)
+    }
+}
+
 socket.on('connect', function () {
     console.log('Connected to the server !')
 
@@ -14,7 +31,7 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMessage', function (message) {
-    var formatedTime = moment(message.createdAt).format('h:mm a')        
+    var formatedTime = moment(message.createdAt).format('h:mm a')
     var template = jQuery('#message-template').html();
     var html = Mustache.render(template, {
         text: message.text,
@@ -23,6 +40,7 @@ socket.on('newMessage', function (message) {
     });
 
     jQuery('#messages').append(html)
+    scrollToBottom();
 
     // console.log('message', message) //client side consle chorme ctrl+shift+i -> console
     // var li = jQuery('<li></li>');
@@ -34,13 +52,14 @@ socket.on('newMessage', function (message) {
 socket.on('newLocationMessage', function (message) {
     var formatedTime = moment(message.createdAt).format('h:mm a')
     var template = jQuery('#location-template').html()
-    var html = Mustache.render(template,{
+    var html = Mustache.render(template, {
         from: message.from,
         url: message.url,
         createdAt: formatedTime
     })
 
     jQuery('#messages').append(html)
+    scrollToBottom();
 
     // var li = jQuery('<li></li>')
     // var a = jQuery('<a target="_blank">My current location</a>')

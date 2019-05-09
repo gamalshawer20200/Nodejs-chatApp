@@ -17,7 +17,7 @@ class Users {
     addUser(id, name, room) {
         return new Promise((resolve, reject) => {
             var user = { id, name, room }
-            var foundUser = this.users.find((item) => item.name === user.name && item.room === user.room)
+            var foundUser = this.users.find((item) => item.name === user.name.trim() && item.room === user.room.trim())
             if (!foundUser) {
                 this.users.push(user)
                 resolve(user)
